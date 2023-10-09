@@ -97,13 +97,23 @@ void test_of_eqsmaller() {
 }
 
 void test_of_mult() {
-    BigInt a("2");
-    BigInt b("2");
+    BigInt a("12");
+    BigInt b("13");
     BigInt res;
     res = a*b;
 
-    cout << res;
-    if (res == 4) {cout << "CORRECT\n";}
+    if (res == 156) {cout << "CORRECT\n";}
+    else {cout << "ERROR\n";} 
+}
+
+void test_of_giantism() {
+    BigInt huge("1");
+    for (int i = 0; i < 64; i++) huge*=2;
+    BigInt a, b;
+    a = (huge - 1)*(huge + 1);
+    b = huge * huge;
+
+    if (b - a == 1) {cout << "CORRECT\n";}
     else {cout << "ERROR\n";} 
 }
 
@@ -144,6 +154,9 @@ int main() {
 
     cout << "Testing of operator* result: ";
     test_of_mult();
+
+    cout << "Testing of giantism result: ";
+    test_of_giantism();
     
 
     return 0;

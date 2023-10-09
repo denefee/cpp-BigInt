@@ -12,7 +12,6 @@ public:
 	BigInt(BigInt &);
 
 	// Helper functions:
-	friend bool Null(const BigInt &);
 	friend int Length(const BigInt &);
 	int operator[](const int)const;
 
@@ -35,9 +34,9 @@ public:
 	friend bool operator>=(const BigInt &, const BigInt &);
 	friend bool operator<(const BigInt &, const BigInt &);
 	friend bool operator<=(const BigInt &, const BigInt &);
-
+	
 	friend BigInt &operator*=(BigInt &, const BigInt &);
-	friend BigInt operator*(const BigInt &, const BigInt &);
+    friend BigInt operator*(const BigInt &, const BigInt &);
 
 	friend ostream &operator<<(ostream &,const BigInt &);
 	friend istream &operator>>(istream &, BigInt &);
@@ -76,12 +75,6 @@ BigInt::BigInt(const char *s) {
 
 BigInt::BigInt(BigInt &a) {
 	digits = a.digits;
-}
-
-bool Null(const BigInt &a) {
-	if (a.digits.size() == 1 && a.digits[0] == 0)
-		return true;
-	return false;
 }
 
 int Length(const BigInt &a) {
@@ -231,34 +224,38 @@ BigInt operator-(const BigInt& a, const BigInt&b) {
 }
 
 BigInt &operator*=(BigInt &a, const BigInt &b) {
-	if (Null(a) || Null(b)) {
-		a = BigInt();
-		return a;
-	}
-	int n = a.digits.size(), m = b.digits.size();
-	vector<int> v(n + m, 0);
-	for (int i = n-1; i >= 0; i--)
-		for (int j = m-1; j >= 0; j--){
-			v[i + j] += (a.digits[i] ) * (b.digits[j]);
-		}
-	n += m;
-	a.digits.resize(v.size());
-	for (int s, i = n-1, t = 0; i >= 0; i--) {
-		s = t + v[i];
-		v[i] = s % 10;
-		t = s / 10;
-		a.digits[i] = v[i] ;
-	}
-	for (int i = 0; i < n && !v[i]; i--)
-			a.digits.pop_back();
-	return a;
+    BigInt result;
+    BigInt zero("0");
+    if (a == zero || b == zero) {
+        a = zero;
+        return a;
+    }
+
+    int n = Length(a), m = Length(b);
+    for (int i = 0; i < n + m; i++) {
+        result.digits.push_back(0);
+    }
+    for (int i = 0; i < n; i++) {
+        int carry = 0;
+        for (int j = 0; j < m; j++) {
+            int product = a.digits[i] * b.digits[j] + result.digits[i + j] + carry;
+            result.digits[i + j] = product % 10;
+            carry = product / 10;
+        }
+        result.digits[i + m] += carry;
+    }
+    while (result.digits.size() > 1 && result.digits.back() == 0) {
+        result.digits.pop_back();
+    }
+    a = result;
+    return a;
 }
 
-BigInt operator*(const BigInt&a, const BigInt&b){
-	BigInt temp;
-	temp = a;
-	temp *= b;
-	return temp;
+BigInt operator*(const BigInt &a, const BigInt &b) {
+    BigInt temp;
+	temp = a; 
+    temp *= b;  
+    return temp;
 }
 
 istream &operator>>(istream &in, BigInt&a){
