@@ -40,7 +40,6 @@ BigInt test_of_summ() {
 void test_of_minus_minus() {
     BigInt num(12345);
     num--;
-    std::cout << num << '\n';
     if (num == 12344) {std::cout << "CORRECT\n";}
     else {std::cout << "ERROR\n";} 
 }
@@ -111,11 +110,9 @@ void test_of_eqsmaller() {
 
 void test_of_mult() {
     BigInt a(-12);
-    std::cout << a << '\n';
     BigInt b(13);
     BigInt res;
     res = a*b;
-    std::cout << res << '\n';
 
     if (res == -156) {std::cout << "CORRECT\n";}
     else {std::cout << "ERROR\n";} 
