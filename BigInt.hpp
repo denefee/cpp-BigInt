@@ -300,9 +300,10 @@ BigInt &operator-=(BigInt&a, const BigInt &b) {
 				t = 0;
 			a.digits[i] = s;
 		}
-		while (n > 1 && a.digits[n - 1] == 0)
+		while (n > 1 && a.digits[n - 1] == 0) {
 			a.digits.pop_back(),
 			n--;
+		}
 		return a;
 	}
 	return a;
